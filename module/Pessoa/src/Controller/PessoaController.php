@@ -2,6 +2,7 @@
 
 namespace Pessoa\Controller;
 
+use Exception;
 use Pessoa\Form\PessoaForm;
 use Pessoa\Model\Pessoa;
 use Zend\Http\Response;
@@ -51,18 +52,67 @@ class PessoaController extends AbstractActionController
         return $this->redirect()->toRoute('pessoa');
     }
 
-    public function editarAction(): ViewModel
+
+    /**
+     * @return array|Response
+     */
+    public function editarAction()
     {
-        return new ViewModel();
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (0 === $id){
+            return $this->redirect()->toRoute('pessoa', ['action' => 'adicionar']);
+        }
+
+        try {
+            $pessoa = $this->table->getPessoa($id);
+        }catch (Exception $e){
+            return $this->redirect()->toRoute('pessoa', ['action' => 'index']);
+        }
+
+        $form = new PessoaForm();
+        $form->bind($pessoa);
+        $form->get('submit')->setAttribute('value', 'Salvar');
+        $request = $this->getRequest();
+        $viewData = ['id' => $id, 'form' => $form];
+
+        if(!$request->isPost()){
+            return $viewData;
+        }
+
+        $form->setData($request->getPost());
+
+        if(!$form->isValid()){
+            return $viewData;
+        }
+
+        $this->table->salvarPessoa($pessoa);
+
+        return $this->redirect()->toRoute('pessoa');
+
     }
 
-    public function removerAction(): ViewModel
+    /**
+     * @return array|Response
+     */
+    public function removerAction()
     {
-        return new ViewModel();
-    }
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (0 === $id){
+            return $this->redirect()->toRoute('pessoa');
+        }
+        $request = $this->getRequest();
+        if ($request->isPost()){
 
-    public function confirmacaoAction(): ViewModel
-    {
-        return new ViewModel();
+            $del = $request->getPost('del','nao');
+
+            if ($del == 'Sim'){
+               $id = (int) $request->getPost('id');
+               $this->table->deletarPessoa($id);
+            }
+
+            return $this->redirect()->toRoute('pessoa');
+        }
+
+        return ['id' => $id, 'pessoa' => $this->table->getPessoa($id)];
     }
 }

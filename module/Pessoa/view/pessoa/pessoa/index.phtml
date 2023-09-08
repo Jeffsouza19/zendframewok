@@ -1,22 +1,30 @@
 <?php
-
+$title = 'Lista de Pessoas';
+$this->headTitle($title);
 ?>
 
-<h1>Lista de Pessoas</h1>
+<h1><?=$this->escapeHtml($title)?></h1>
 <a href="<?=$this->url('pessoa', ['action' => 'index'])?>" class="btn btn-warning"> Voltar</a>
 <a href="<?=$this->url('pessoa', ['action' => 'adicionar'])?>" class="btn btn-primary ml-1"> Adicionar</a>
 <table class="table table-stripped">
     <tr>
         <th>Codigo</th>
         <th>Nome</th>
+        <th>Sobrenome</th>
         <th>Status</th>
+        <th>Ações</th>
     </tr>
     <?php 
         foreach($pessoas as $pes){ ?>
             <tr>
                 <td><?=$pes->getId()?></td>
                 <td><?=$pes->getNome()?></td>
+                <td><?=$pes->getSobrenome()?></td>
                 <td><?=$pes->getSituacao()?></td>
+                <td>
+                    <a href="<?=$this->url('pessoa', ['action' => 'editar', 'id' => $pes->getId()])?>" class="btn btn-info"><i class="glyphicon glyphicon-edit"></i> Editar</a>
+                    <a href="<?=$this->url('pessoa', ['action' => 'remover', 'id' => $pes->getId()])?>" class="btn btn-danger">Remover</a>
+                </td>
             </tr>
             <?php
         }

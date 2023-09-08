@@ -2,7 +2,9 @@
 
 namespace Pessoa\Model;
 
-class Pessoa 
+use Zend\Stdlib\ArraySerializableInterface;
+
+class Pessoa implements ArraySerializableInterface
 {
     private $id;
     private $nome;
@@ -10,12 +12,12 @@ class Pessoa
     private $email;
     private $situacao;
 
-    public function exchangeArray(array $data){
-        $this->id = !empty($data['id']) ? $data['id'] : null ;
-        $this->nome = !empty($data['nome']) ? $data['nome'] : null ;
-        $this->sobrenome = !empty($data['sobrenome']) ? $data['sobrenome'] : null ;
-        $this->email = !empty($data['email']) ? $data['email'] : null ;
-        $this->situacao = !empty($data['situacao']) ? $data['situacao'] : null ;
+    public function exchangeArray(array $array){
+        $this->id = !empty($array['id']) ? $array['id'] : null ;
+        $this->nome = !empty($array['nome']) ? $array['nome'] : null ;
+        $this->sobrenome = !empty($array['sobrenome']) ? $array['sobrenome'] : null ;
+        $this->email = !empty($array['email']) ? $array['email'] : null ;
+        $this->situacao = !empty($array['situacao']) ? $array['situacao'] : null ;
     }
 
     public function getId()
@@ -68,4 +70,14 @@ class Pessoa
         $this->situacao = $situacao;
     }
 
+    public function getArrayCopy(): array
+    {
+        return [
+            'id' => $this->id,
+            'nome' => $this->nome,
+            'sobrenome' => $this->sobrenome,
+            'email' => $this->email,
+            'situacao' => $this->situacao
+        ];
+    }
 }
