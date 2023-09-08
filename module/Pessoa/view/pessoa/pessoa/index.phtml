@@ -1,0 +1,24 @@
+<?php
+
+?>
+
+<h1>Lista de Pessoas</h1>
+<a href="<?=$this->url('pessoa', ['action' => 'index'])?>" class="btn btn-warning"> Voltar</a>
+<a href="<?=$this->url('pessoa', ['action' => 'adicionar'])?>" class="btn btn-primary ml-1"> Adicionar</a>
+<table class="table table-stripped">
+    <tr>
+        <th>Codigo</th>
+        <th>Nome</th>
+        <th>Status</th>
+    </tr>
+    <?php 
+        foreach($pessoas as $pes){ ?>
+            <tr>
+                <td><?=$pes->getId()?></td>
+                <td><?=$pes->getNome()?></td>
+                <td><?=$pes->getSituacao()?></td>
+            </tr>
+            <?php
+        }
+        ?>
+</table>
